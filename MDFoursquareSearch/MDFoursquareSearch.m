@@ -108,7 +108,7 @@
 
 #pragma mark - Backend
 -(NSURLRequest *)browseURLRequestForCoordinates:(CLLocationCoordinate2D)coordinates radius:(NSInteger)radius andName:(NSString *)name {
-    NSString *baseURLString = @"https://api.foursquare.com/v2/venues/search?intent=browse&ll=%@&radius=%@&client_id=%@&client_secret=%@&v=20121912&limit=50";
+    NSString *baseURLString = @"https://api.foursquare.com/v2/venues/search?intent=browse&ll=%@&radius=%d&client_id=%@&client_secret=%@&v=20121912&limit=50";
     
     if (name) {
         baseURLString = [baseURLString stringByAppendingFormat:@"&query=%@", name];

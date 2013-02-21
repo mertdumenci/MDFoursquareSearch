@@ -1,6 +1,6 @@
 # MDFoursquareSearch
 
-MDFoursquareSearch is a super simple venue search API for iOS, powered by [Foursquare Venues Search API](https://developer.foursquare.com/docs/venues/search).
+MDFoursquareSearch is a super simple venue search API for iOS, powered by the [Foursquare Venues Search API](https://developer.foursquare.com/docs/venues/search).
 
 ## Usage
 
@@ -60,7 +60,9 @@ All of MDFoursquareSearch's methods are directly invokable from the class.
 ## Dependencies
 
 Foundation
+
 CoreLocation
+
 [AFNetworking](https://github.com/AFNetworking/AFNetworking)
 
 ## License

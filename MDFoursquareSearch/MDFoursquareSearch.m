@@ -20,7 +20,7 @@
 +(void)searchFoursquareForCoordinates:(CLLocationCoordinate2D)coordinates radius:(NSInteger)radius forName:(NSString *)name withCompletionBlock:(FoursquareSearchCompletionBlock)completionBlock {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         
-        AFJSONRequestOperation *op = [AFJSONRequestOperation JSONRequestOperationWithRequest:[[self class] browseURLRequestForCoordinates:coordinates radius:radius andName:name] success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        AFJSONRequestOperation *op = [AFJSONRequestOperation JSONRequestOperationWithRequest:[self browseURLRequestForCoordinates:coordinates radius:radius andName:name] success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
             NSDictionary *responseDict = (NSDictionary *)JSON;
             NSInteger HTTPCode = [responseDict[@"meta"][@"code"] integerValue];
             
@@ -54,14 +54,14 @@
 }
 
 +(void)searchFoursquareForCoordinates:(CLLocationCoordinate2D)coordinates radius:(NSInteger)radius withCompletionBlock:(FoursquareSearchCompletionBlock)completionBlock {
-    [[self class] searchFoursquareForCoordinates:coordinates radius:radius forName:nil withCompletionBlock:^(NSArray *locations) {
+    [self searchFoursquareForCoordinates:coordinates radius:radius forName:nil withCompletionBlock:^(NSArray *locations) {
         completionBlock(locations);
     }];
 }
 
 +(void)searchFoursquareForName:(NSString *)name withCompletionBlock:(FoursquareSearchCompletionBlock)completionBlock {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            AFJSONRequestOperation *op = [AFJSONRequestOperation JSONRequestOperationWithRequest:[[self class]globalURLRequestForName:name] success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+            AFJSONRequestOperation *op = [AFJSONRequestOperation JSONRequestOperationWithRequest:[self globalURLRequestForName:name] success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
                 NSDictionary *responseDict = (NSDictionary *)JSON;
                 NSInteger HTTPCode = [responseDict[@"meta"][@"code"] integerValue];
                 

@@ -11,6 +11,18 @@
 
 @interface MDFoursquarePlace : NSObject
 
+/*!
+    @name Initialising
+*/
+
+/*!
+    Initialise a new MDFoursquarePlace object.
+ 
+    @param dict JSON venue dict returned from the Foursquare API.
+    
+    @return id A MDFoursquarePlace instance.
+ */
+
 -(id)initWithAPIPlaceDictionary:(NSDictionary *)dict;
 
 @property (nonatomic, copy) NSString *name;

@@ -11,28 +11,16 @@
 #import "AFNetworking.h"
 
 @interface MDFoursquareSearch (private)
--(NSURLRequest *)browseURLRequestForCoordinates:(CLLocationCoordinate2D)coordinates radius:(NSInteger)radius andName:(NSString *)name;
--(NSURLRequest *)globalURLRequestForName:(NSString *)name;
++(NSURLRequest *)browseURLRequestForCoordinates:(CLLocationCoordinate2D)coordinates radius:(NSInteger)radius andName:(NSString *)name;
++(NSURLRequest *)globalURLRequestForName:(NSString *)name;
 @end
 
 @implementation MDFoursquareSearch
-#pragma mark - Lifecycle
-
-+(MDFoursquareSearch *)sharedFoursquareSearch {
-    static MDFoursquareSearch *fsSearch;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        fsSearch = [[MDFoursquareSearch alloc] init];
-    });
-    
-    return fsSearch;
-}
-
-#pragma mark - External Methods
--(void)searchFoursquareForCoordinates:(CLLocationCoordinate2D)coordinates radius:(NSInteger)radius forName:(NSString *)name withCompletionBlock:(FoursquareSearchCompletionBlock)completionBlock {
+#pragma mark - Class Methods
++(void)searchFoursquareForCoordinates:(CLLocationCoordinate2D)coordinates radius:(NSInteger)radius forName:(NSString *)name withCompletionBlock:(FoursquareSearchCompletionBlock)completionBlock {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         
-        AFJSONRequestOperation *op = [AFJSONRequestOperation JSONRequestOperationWithRequest:[self browseURLRequestForCoordinates:coordinates radius:radius andName:name] success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        AFJSONRequestOperation *op = [AFJSONRequestOperation JSONRequestOperationWithRequest:[[self class] browseURLRequestForCoordinates:coordinates radius:radius andName:name] success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
             NSDictionary *responseDict = (NSDictionary *)JSON;
             NSInteger HTTPCode = [responseDict[@"meta"][@"code"] integerValue];
             
@@ -65,15 +53,15 @@
     });
 }
 
--(void)searchFoursquareForCoordinates:(CLLocationCoordinate2D)coordinates radius:(NSInteger)radius withCompletionBlock:(FoursquareSearchCompletionBlock)completionBlock {
-    [self searchFoursquareForCoordinates:coordinates radius:radius forName:nil withCompletionBlock:^(NSArray *locations) {
++(void)searchFoursquareForCoordinates:(CLLocationCoordinate2D)coordinates radius:(NSInteger)radius withCompletionBlock:(FoursquareSearchCompletionBlock)completionBlock {
+    [[self class] searchFoursquareForCoordinates:coordinates radius:radius forName:nil withCompletionBlock:^(NSArray *locations) {
         completionBlock(locations);
     }];
 }
 
--(void)searchFoursquareForName:(NSString *)name withCompletionBlock:(FoursquareSearchCompletionBlock)completionBlock {
++(void)searchFoursquareForName:(NSString *)name withCompletionBlock:(FoursquareSearchCompletionBlock)completionBlock {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            AFJSONRequestOperation *op = [AFJSONRequestOperation JSONRequestOperationWithRequest:[self globalURLRequestForName:name] success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+            AFJSONRequestOperation *op = [AFJSONRequestOperation JSONRequestOperationWithRequest:[[self class]globalURLRequestForName:name] success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
                 NSDictionary *responseDict = (NSDictionary *)JSON;
                 NSInteger HTTPCode = [responseDict[@"meta"][@"code"] integerValue];
                 
@@ -107,7 +95,7 @@
 }
 
 #pragma mark - Backend
--(NSURLRequest *)browseURLRequestForCoordinates:(CLLocationCoordinate2D)coordinates radius:(NSInteger)radius andName:(NSString *)name {
++(NSURLRequest *)browseURLRequestForCoordinates:(CLLocationCoordinate2D)coordinates radius:(NSInteger)radius andName:(NSString *)name {
     NSString *baseURLString = @"https://api.foursquare.com/v2/venues/search?intent=browse&ll=%@&radius=%d&client_id=%@&client_secret=%@&v=20121912&limit=50";
     
     if (name) {
@@ -119,7 +107,7 @@
     return request;
 }
 
--(NSURLRequest *)globalURLRequestForName:(NSString *)name {
++(NSURLRequest *)globalURLRequestForName:(NSString *)name {
     NSString *baseURLString = @"https://api.foursquare.com/v2/venues/search?intent=global&query=%@&client_id=%@&client_secret=%@&v=20121912&limit=50";
     NSString *formattedURLString = [NSString stringWithFormat:baseURLString, name, kClientID, kClientSecret];
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:formattedURLString]];

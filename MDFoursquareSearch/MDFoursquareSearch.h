@@ -13,7 +13,7 @@
 
 /*!
     @mainpage MDFoursquarePlace
-    MDFoursquarePlace is a iOS Framework written by Mert Dümenci in Objective-C 2.0 and released under the MIT Open Source License.
+    MDFoursquarePlace is a iOS class written by Mert Dümenci in Objective-C 2.0 and released under the MIT Open Source License.
  
     Classes in the MDFoursquarePlace Framework offer simple venue search via the Foursquare API.
  */
